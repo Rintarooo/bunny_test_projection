@@ -43,9 +43,8 @@ int main (int argc, char* argv[])
     // }
     // const char *filename_pose = "tf_stamp.txt";
     const char *filename_pose = "SfM_quality_evaluation/p11_tf.txt";// argv[1];
-    // const char *filename_pcl = "model_house_oxford/house.p3d";
+    const char *filename_pcl = "model_house_oxford/house.p3d";// argv[2]
     // const char *filename_pcl = "bunny/data/bun090.ply";
-    const char *filename_pcl = "fou.ply";
     const char *filename_write = "uv.txt";
     std::vector<cv::Mat> vec_Rwc, vec_twc;
     std::vector<std::vector<float>> vec_vec_pcl;
@@ -60,7 +59,7 @@ int main (int argc, char* argv[])
         cx = 319.5;
         cy = 239.5;    
     }
-       else if (std::string(filename_pose) == "SfM_quality_evaluation/p11_tf.txt"){
+    else if (std::string(filename_pose) == "SfM_quality_evaluation/p11_tf.txt"){
         width = 3072;// 480;// 640;// 480;// 3072
         height = 2048;//320;// 480;// 320;// 2048
         fx = 2759.48*width/3072.;// 2759.48;// 
@@ -86,28 +85,15 @@ int main (int argc, char* argv[])
     // }
     std::cout << "K:\n" << K << std::endl;
     
-    int i = 0;
-    // for (int i = 0; i < 9; i++){
-    cv::Mat Rwc, twc, Rcw, tcw, P;
-    Rwc = vec_Rwc[i];
-    twc = vec_twc[i];
-    getRcw_fromRwc(Rwc, twc, Rcw, tcw);
-    // Rcw = vec_Rwc[i];
-    // tcw = vec_twc[i];
-    getP_fromK_Rcw(K, Rcw, tcw, P);
+    cv::Mat P = (cv::Mat_<float>(3,4) <<
+        -667.1324398703851557, 15.186601706999681483, -399.12216996267011382, -64.171047371437467177, 
+0.26127780106302650465, -664.13069781367391897, -289.01467806003762462, -0.76296166656404640349, 
+-0.00013667887261007119113, 0.034010281383445604975, -1.0006416157197026706, 0.016977709775627819466);
 
-    std::cout << "Rcw:\n" << Rcw << "\ntcw:\n" << tcw << std::endl;
     std::cout << "P: \n" << P << std::endl;
-    
-    cv::Mat Rtcw = (cv::Mat_<float>(3,4) <<
-           Rcw.at<float>(0,0), Rcw.at<float>(0,1), Rcw.at<float>(0,2), tcw.at<float>(0),
-           Rcw.at<float>(1,0), Rcw.at<float>(1,1), Rcw.at<float>(1,2), tcw.at<float>(1),
-           Rcw.at<float>(2,0), Rcw.at<float>(2,1), Rcw.at<float>(2,2), tcw.at<float>(2));
  
-
     // int k = 0;
-    // for (int k = 0; k < vec_vec_pcl.size(); k++){
-    for (int k = 0; k < 10; k++){
+    for (int k = 0; k < vec_vec_pcl.size(); k++){
         std::vector<float> vec_pcl = vec_vec_pcl[k];
         float xw, yw, zw;
         // std::cout << vec_pcl.size();

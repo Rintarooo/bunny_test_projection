@@ -45,9 +45,9 @@ void pcl_loader (const char *filename,
 	}
    std::string line;
    // skip 24 line
-   for(int i = 0; i < 24; i++){
-   	std::getline(ifs, line);
-   }
+   // for(int i = 0; i < 24; i++){
+   // 	std::getline(ifs, line);
+   // }
    while (std::getline(ifs, line)){
    	std::stringstream ss(line);// ss << line;
    	std::vector<float> vec_pcl;
