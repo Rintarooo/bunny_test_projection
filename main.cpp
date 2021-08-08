@@ -120,6 +120,7 @@ int main (int argc, char* argv[])
     // int k = 0;
     // for (int k = 0; k < vec_vec_pcl.size(); k++){
     for (int k = 25; k < 28; k++){
+    // for (int k = 0; k < 10; k++){
         std::vector<float> vec_pcl = vec_vec_pcl[k];
         float xw, yw, zw;
         // std::cout << vec_pcl.size();

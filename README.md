@@ -10,33 +10,19 @@ docker run --rm -it -v $HOME/coding/:/opt/coding/ -w /opt/coding/ codesignal/ope
 docker run --rm -it -v $HOME/coding/:/opt/coding/ -w /opt/coding/ rin/python:opencv
 ```
 
-memory checker
 ```bash
-cuda-memcheck ./build/main tf_stamp.txt
-```
-<br>
-
-
-run `cuda-gdb`
-```bash
-cuda-gdb ./build/main
+gnuplot
 ```
 <br>
 
 ```bash
-(cuda-gdb) b updateCostVolume
+gnuplot > 
+set terminal png
+set output "graph.png"
+plot "./uv.txt" with dots
+# plot "./uv.txt" with point ps 1
 ```
 <br>
 
-start program
-```bash
-(cuda-gdb) r tf_stamp.txt
-```
-<br>
+https://sci-tech.ksc.kwansei.ac.jp/~osaki/students/gnu/save_png.html
 
-
-if the error, `fatal:  All CUDA devices are used for display and cannot be used while debugging. (error code = CUDBG_ERROR_ALL_DEVICES_WATCHDOGGED(0x18)
-` happens during debugging, set the following environment command
-```bash
-export CUDA_DEBUGGER_SOFTWARE_PREEMPTION=1
-```
