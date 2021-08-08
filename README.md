@@ -5,6 +5,11 @@ docker run --rm -it --runtime=nvidia --cap-add=SYS_PTRACE --security-opt="seccom
 ```
 <br>
 
+```bash
+docker run --rm -it -v $HOME/coding/:/opt/coding/ -w /opt/coding/ codesignal/opencv:v9.4.0
+docker run --rm -it -v $HOME/coding/:/opt/coding/ -w /opt/coding/ rin/python:opencv
+```
+
 memory checker
 ```bash
 cuda-memcheck ./build/main tf_stamp.txt

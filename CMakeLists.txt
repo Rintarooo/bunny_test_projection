@@ -14,13 +14,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -ggdb3 -O0")# -g3
 
 
 find_package(OpenCV REQUIRED)
-set(CMAKE_CUDA_COMPILER  /usr/local/cuda/bin/nvcc)
-find_package(CUDA REQUIRED)
+# set(CMAKE_CUDA_COMPILER  /usr/local/cuda/bin/nvcc)
+# find_package(CUDA REQUIRED)
 
 # directories where header files exists
 include_directories(
   ${OpenCV_INCLUDE_DIRS}
-  ${CUDA_INCLUDE_DIRS}
+  # ${CUDA_INCLUDE_DIRS}
   # CostVolume/
 )
 
@@ -36,7 +36,8 @@ include_directories(
 #   main.cpp f_load.cpp
 #   -G )
 
-cuda_add_executable(main
+# cuda_add_executable(main
+add_executable(main
   main.cpp
   f_load.cpp
   # CostVolume/CostVolume.cpp
@@ -47,11 +48,12 @@ cuda_add_executable(main
 
 target_link_libraries(main
   ${OpenCV_LIBRARIES}
-  ${CUDA_LIBRARIES}
+  # ${CUDA_LIBRARIES}
   # cost_volume_lib
 )
 
-cuda_add_executable(sub
+# cuda_add_executable(sub
+add_executable(sub
   sub.cpp
   f_load.cpp
   # CostVolume/CostVolume.cpp
@@ -61,7 +63,7 @@ cuda_add_executable(sub
 
 target_link_libraries(sub
   ${OpenCV_LIBRARIES}
-  ${CUDA_LIBRARIES}
+  # ${CUDA_LIBRARIES}
   # cost_volume_lib
 )
 

@@ -12,7 +12,7 @@ void getRcw_fromRwc(const cv::Mat &Rwc, const cv::Mat &twc,
 {
     Rcw =  Rwc.t();// Rcw = Rwc^-1, Rwc is rotation matrix from camera frame to world frame.
     tcw = -Rwc.t()*twc;// slide 28/80. https://www.slideshare.net/SSII_Slides/ssii2019ts3-149136612/28
-    // tcw = -Rcw*twc;
+    // tcw = cv::Mat::zeros(3, 1, CV_32FC1);// camera origin is fixed to (0,0,0) in world frame
 }
 
 void getP_fromK_Rcw(const cv::Mat &K, const cv::Mat &Rcw, const cv::Mat &tcw, 
@@ -22,7 +22,12 @@ void getP_fromK_Rcw(const cv::Mat &K, const cv::Mat &Rcw, const cv::Mat &tcw,
            Rcw.at<float>(0,0), Rcw.at<float>(0,1), Rcw.at<float>(0,2), tcw.at<float>(0),
            Rcw.at<float>(1,0), Rcw.at<float>(1,1), Rcw.at<float>(1,2), tcw.at<float>(1),
            Rcw.at<float>(2,0), Rcw.at<float>(2,1), Rcw.at<float>(2,2), tcw.at<float>(2));
-    P = K * Rtcw;    
+    // cv::Mat Rtcw = (cv::Mat_<float>(3,4) <<
+    //        1,0,0,0,
+    //        0,1,0,0,
+    //        0,0,1,0);
+    P = K * Rtcw;
+    // P = K.inv() * Rtcw;    
 }
 
 // void getP_fromRwc(const cv::Mat &K, const cv::Mat &Rwc, const cv::Mat &twc, 
@@ -44,8 +49,8 @@ int main (int argc, char* argv[])
     // const char *filename_pose = "tf_stamp.txt";
     const char *filename_pose = "SfM_quality_evaluation/p11_tf.txt";// argv[1];
     // const char *filename_pcl = "model_house_oxford/house.p3d";
-    // const char *filename_pcl = "bunny/data/bun090.ply";
-    const char *filename_pcl = "fou.ply";
+    const char *filename_pcl = "bunny/data/bun000.ply";
+    // const char *filename_pcl = "fou.ply";
     const char *filename_write = "uv.txt";
     std::vector<cv::Mat> vec_Rwc, vec_twc;
     std::vector<std::vector<float>> vec_vec_pcl;
@@ -89,8 +94,19 @@ int main (int argc, char* argv[])
     int i = 0;
     // for (int i = 0; i < 9; i++){
     cv::Mat Rwc, twc, Rcw, tcw, P;
-    Rwc = vec_Rwc[i];
-    twc = vec_twc[i];
+    // Rwc = vec_Rwc[i];
+    // twc = vec_twc[i];
+
+    // cv::Mat vec01 = (cv::Mat_<float>(3,1) <<  0,
+    //                                           0,
+    //                                           1);
+    // std::cout << "camera z axis: " << Rwc*vec01 << std::endl;
+    Rwc = cv::Mat::eye(3, 3, CV_32FC1);
+    twc = cv::Mat::zeros(3, 1, CV_32FC1);
+
+
+
+
     getRcw_fromRwc(Rwc, twc, Rcw, tcw);
     // Rcw = vec_Rwc[i];
     // tcw = vec_twc[i];
@@ -99,28 +115,57 @@ int main (int argc, char* argv[])
     std::cout << "Rcw:\n" << Rcw << "\ntcw:\n" << tcw << std::endl;
     std::cout << "P: \n" << P << std::endl;
     
-    cv::Mat Rtcw = (cv::Mat_<float>(3,4) <<
-           Rcw.at<float>(0,0), Rcw.at<float>(0,1), Rcw.at<float>(0,2), tcw.at<float>(0),
-           Rcw.at<float>(1,0), Rcw.at<float>(1,1), Rcw.at<float>(1,2), tcw.at<float>(1),
-           Rcw.at<float>(2,0), Rcw.at<float>(2,1), Rcw.at<float>(2,2), tcw.at<float>(2));
- 
+   
 
     // int k = 0;
     // for (int k = 0; k < vec_vec_pcl.size(); k++){
-    for (int k = 0; k < 10; k++){
+    for (int k = 25; k < 28; k++){
         std::vector<float> vec_pcl = vec_vec_pcl[k];
         float xw, yw, zw;
         // std::cout << vec_pcl.size();
         xw = vec_pcl[0];
         yw = vec_pcl[1];
         zw = vec_pcl[2];
-        // std::cout << "xw: " << xw << ", yw: " << yw << ", zw" << zw << std::endl;
+        // xw = -0.001;//0.0002;
+        // yw = 1;//0.0002;
+        // zw = 10;
+        
+        // xw = xw/zw;
+        // yw = yw/zw;
+        // zw = zw/zw;
+        std::cout << "xw: " << xw << ", yw: " << yw << ", zw" << zw << std::endl;
+        
+
+        cv::Mat world_xyz = (cv::Mat_<float>(3,1) <<  xw,
+                                                yw,
+                                                zw);
+        cv::Mat camera_xyz =  Rcw * world_xyz;
+        float depth_diff;
+        depth_diff = 1 - zw;
+        // float offset=9.6;
+        // xw = xw + offset;
+        // yw = yw + offset;
+        // zw = zw + offset;
+        camera_xyz = depth_diff + camera_xyz;
+        std::cout << "camera_xyz: " << camera_xyz << std::endl;
+
+        
+
         cv::Mat pcl = (cv::Mat_<float>(4,1) <<  xw,
                                                 yw,
                                                 zw,
                                                 1);
-        cv::Mat uv = P * pcl;
-        uv = 1/uv.at<float>(2,0) * uv;// normalize
+        cv::Mat uv =  P * pcl;
+        std::cout << "homogenous uv: " << uv << std::endl;
+        float scale = 1/uv.at<float>(2,0);
+        uv = scale * uv;// normalize, devide by scale
+        
+        // cv::Mat pcl = (cv::Mat_<float>(3,1) <<  xw,
+        //                                         yw,
+        //                                         zw);
+        // cv::Mat uv;
+        // cv::projectPoints(pcl, Rcw, tcw, K, 0, uv);
+
         std::cout << "pcl ==> uv\npcl: \n" << pcl << "\nuv: \n" << uv << std::endl;
         uv_writer(filename_write, uv);
     }

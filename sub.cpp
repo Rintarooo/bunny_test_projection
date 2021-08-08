@@ -106,7 +106,9 @@ int main (int argc, char* argv[])
                                                 zw,
                                                 1);
         cv::Mat uv = P * pcl;
-        uv = 1/uv.at<float>(2,0) * uv;// normalize
+        // std::cout << "uv: \n" << uv << std::endl;
+        float scale = 1/uv.at<float>(2,0);
+        uv = scale * uv;// normalize, devide by scale
         std::cout << "pcl ==> uv\npcl: \n" << pcl << "\nuv: \n" << uv << std::endl;
         uv_writer(filename_write, uv);
     }
