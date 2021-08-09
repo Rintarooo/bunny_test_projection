@@ -52,19 +52,22 @@ target_link_libraries(main
   # cost_volume_lib
 )
 
-# cuda_add_executable(sub
 add_executable(sub
   sub.cpp
   f_load.cpp
-  # CostVolume/CostVolume.cpp
-  # CostVolume/CostVolume_update.cu
-  # OPTIONS -G
 )
 
 target_link_libraries(sub
   ${OpenCV_LIBRARIES}
-  # ${CUDA_LIBRARIES}
-  # cost_volume_lib
+)
+
+add_executable(transform_frame
+  transform_frame.cpp
+  f_load.cpp
+)
+
+target_link_libraries(transform_frame
+  ${OpenCV_LIBRARIES}
 )
 
 # for debug
