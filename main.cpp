@@ -49,9 +49,12 @@ int main (int argc, char* argv[])
     // const char *filename_pose = "tf_stamp.txt";
     const char *filename_pose = "SfM_quality_evaluation/p11_tf.txt";// argv[1];
     // const char *filename_pcl = "model_house_oxford/house.p3d";
-    const char *filename_pcl = "bunny/data/bun000.ply";
+    // const char *filename_pcl = "bunny/data/bun000.ply";
+    const char *filename_pcl = "bunny/reconstruction/bun_zipper.ply";
+    
     // const char *filename_pcl = "fou.ply";
     const char *filename_write = "uv.txt";
+    // std::remove(filename_write);
     std::vector<cv::Mat> vec_Rwc, vec_twc;
     std::vector<std::vector<float>> vec_vec_pcl;
     int width, height;
@@ -118,8 +121,8 @@ int main (int argc, char* argv[])
    
 
     // int k = 0;
-    // for (int k = 0; k < vec_vec_pcl.size(); k++){
-    for (int k = 25; k < 28; k++){
+    for (int k = 0; k < vec_vec_pcl.size(); k++){
+    // for (int k = 25; k < 28; k++){
     // for (int k = 0; k < 10; k++){
         std::vector<float> vec_pcl = vec_vec_pcl[k];
         float xw, yw, zw;
