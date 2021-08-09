@@ -85,9 +85,6 @@ int main (int argc, char* argv[])
     cv::Mat K = (cv::Mat_<float>(3,3) <<  fx,  0.0,  cx,
                                         0.0,   fy,  cy,
                                         0.0,  0.0, 1.0);
-    // cv::Mat K = (cv::Mat_<float>(3,4) <<  fx,  0.0,  cx, 0.0,
-    //                                     0.0,   fy,  cy, 0.0,
-    //                                     0.0,  0.0, 0.0, 1.0);
         
     // float* Kptr = (float*)K.data;// Mat.data returns uchar*, so cast into float*
     // for (int i = 0; i < K.total(); i++){
@@ -95,18 +92,20 @@ int main (int argc, char* argv[])
     // }
     std::cout << "K:\n" << K << std::endl;
     
-    int i = 0;
+    int i = 0;//10;//2;//1;
     // for (int i = 0; i < 9; i++){
     cv::Mat Rwc, twc, Rcw, tcw, P;
-    // Rwc = vec_Rwc[i];
-    // twc = vec_twc[i];
+    Rwc = vec_Rwc[i];
+    twc = vec_twc[i];
+    
 
     // cv::Mat vec01 = (cv::Mat_<float>(3,1) <<  0,
     //                                           0,
     //                                           1);
     // std::cout << "camera z axis: " << Rwc*vec01 << std::endl;
-    Rwc = cv::Mat::eye(3, 3, CV_32FC1);
-    twc = cv::Mat::zeros(3, 1, CV_32FC1);
+    
+    // Rwc = cv::Mat::eye(3, 3, CV_32FC1);
+    // twc = cv::Mat::zeros(3, 1, CV_32FC1);
 
 
 
@@ -142,10 +141,10 @@ int main (int argc, char* argv[])
         std::cout << "xw: " << xw << ", yw: " << yw << ", zw" << zw << std::endl;
         
 
-        // cv::Mat world_xyz = (cv::Mat_<float>(3,1) <<  xw,
-        //                                         yw,
-        //                                         zw);
-        // cv::Mat camera_xyz =  Rcw * world_xyz;
+        cv::Mat world_xyz = (cv::Mat_<float>(3,1) <<  xw,
+                                                yw,
+                                                zw);
+        cv::Mat camera_xyz =  Rcw * world_xyz;
         // float depth_diff;
         // depth_diff = 1 - zw;
         // // float offset=9.6;
@@ -153,7 +152,7 @@ int main (int argc, char* argv[])
         // // yw = yw + offset;
         // // zw = zw + offset;
         // camera_xyz = depth_diff + camera_xyz;
-        // std::cout << "camera_xyz: " << camera_xyz << std::endl;
+        std::cout << "camera_xyz: " << camera_xyz << std::endl;
 
         
 
@@ -163,12 +162,12 @@ int main (int argc, char* argv[])
                                                 1);
         cv::Mat uv =  P * pcl;
         std::cout << "homogenous uv: " << uv << std::endl;
-        // float scale = 1/uv.at<float>(2,0);
-        // uv = scale * uv;// normalize, devide by scale
+        float scale = 1/uv.at<float>(2,0);
+        uv = scale * uv;// normalize, devide by scale
         
 
 
-        
+
         // cv::Mat pcl = (cv::Mat_<float>(3,1) <<  xw,
         //                                         yw,
         //                                         zw);
