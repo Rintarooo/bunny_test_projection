@@ -50,7 +50,8 @@ int main (int argc, char* argv[])
     const char *filename_pose = "SfM_quality_evaluation/p11_tf.txt";// argv[1];
     // const char *filename_pcl = "model_house_oxford/house.p3d";
     // const char *filename_pcl = "bunny/data/bun000.ply";
-    const char *filename_pcl = "bunny/reconstruction/bun_zipper.ply";
+    const char *filename_pcl = "bunny/data/bun000.xyz";
+    // const char *filename_pcl = "bunny/reconstruction/bun_zipper.ply";
     
     // const char *filename_pcl = "fou.ply";
     const char *filename_write = "uv.txt";
@@ -124,6 +125,7 @@ int main (int argc, char* argv[])
     for (int k = 0; k < vec_vec_pcl.size(); k++){
     // for (int k = 25; k < 28; k++){
     // for (int k = 0; k < 10; k++){
+        std::cout << "k: " << k << std::endl;
         std::vector<float> vec_pcl = vec_vec_pcl[k];
         float xw, yw, zw;
         // std::cout << vec_pcl.size();
@@ -140,18 +142,18 @@ int main (int argc, char* argv[])
         std::cout << "xw: " << xw << ", yw: " << yw << ", zw" << zw << std::endl;
         
 
-        cv::Mat world_xyz = (cv::Mat_<float>(3,1) <<  xw,
-                                                yw,
-                                                zw);
-        cv::Mat camera_xyz =  Rcw * world_xyz;
-        float depth_diff;
-        depth_diff = 1 - zw;
-        // float offset=9.6;
-        // xw = xw + offset;
-        // yw = yw + offset;
-        // zw = zw + offset;
-        camera_xyz = depth_diff + camera_xyz;
-        std::cout << "camera_xyz: " << camera_xyz << std::endl;
+        // cv::Mat world_xyz = (cv::Mat_<float>(3,1) <<  xw,
+        //                                         yw,
+        //                                         zw);
+        // cv::Mat camera_xyz =  Rcw * world_xyz;
+        // float depth_diff;
+        // depth_diff = 1 - zw;
+        // // float offset=9.6;
+        // // xw = xw + offset;
+        // // yw = yw + offset;
+        // // zw = zw + offset;
+        // camera_xyz = depth_diff + camera_xyz;
+        // std::cout << "camera_xyz: " << camera_xyz << std::endl;
 
         
 
@@ -161,8 +163,11 @@ int main (int argc, char* argv[])
                                                 1);
         cv::Mat uv =  P * pcl;
         std::cout << "homogenous uv: " << uv << std::endl;
-        float scale = 1/uv.at<float>(2,0);
-        uv = scale * uv;// normalize, devide by scale
+        // float scale = 1/uv.at<float>(2,0);
+        // uv = scale * uv;// normalize, devide by scale
+        
+
+
         
         // cv::Mat pcl = (cv::Mat_<float>(3,1) <<  xw,
         //                                         yw,

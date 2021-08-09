@@ -5,10 +5,22 @@ docker run --rm -it --runtime=nvidia --cap-add=SYS_PTRACE --security-opt="seccom
 ```
 <br>
 
+run cpp
 ```bash
 docker run --rm -it -v $HOME/coding/:/opt/coding/ -w /opt/coding/ codesignal/opencv:v9.4.0
+```
+<br>
+
+python plot
+```bash
 docker run --rm -it -v $HOME/coding/:/opt/coding/ -w /opt/coding/ rin/python:opencv
 ```
+
+```bash
+g++ plot.cpp
+./a.out nv.txt
+```
+<br>
 
 ```bash
 gnuplot
