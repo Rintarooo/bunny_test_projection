@@ -150,24 +150,11 @@ int main (int argc, char* argv[])
         std::cout << "k: " << k << std::endl;
         std::vector<float> vec_pcl = vec_vec_pcl[k];
         float xw, yw, zw;
-        // std::cout << vec_pcl.size();
         xw = vec_pcl[0];
         yw = vec_pcl[1];
         zw = vec_pcl[2];
-        // xw = -0.001;//0.0002;
-        // yw = 1;//0.0002;
-        // zw = 10;
-        
-        // xw = xw/zw;
-        // yw = yw/zw;
-        // zw = zw/zw;
         std::cout << "xw: " << xw << ", yw: " << yw << ", zw" << zw << std::endl;
         
-
-        
-
-        
-
         cv::Mat pcl = (cv::Mat_<float>(4,1) <<  xw,
                                                 yw,
                                                 zw,
@@ -178,22 +165,10 @@ int main (int argc, char* argv[])
         uv = scale * uv;// normalize, devide by scale
         
 
-
-
-        // cv::Mat pcl = (cv::Mat_<float>(3,1) <<  xw,
-        //                                         yw,
-        //                                         zw);
-        // cv::Mat uv;
-        // cv::projectPoints(pcl, Rcw, tcw, K, 0, uv);
-
         std::cout << "pcl ==> uv\npcl: \n" << pcl << "\nuv: \n" << uv << std::endl;
         // uv_writer(filename_write, uv);
 
 
-        // cv::Mat world_xyz = (cv::Mat_<float>(3,1) <<  xw,
-        //                                         yw,
-        //                                         zw);
-        // cv::Mat camera_xyz = Rcw * world_xyz;
         cv::Mat camera_xyz_ref = 1/scale * K.inv() * uv;// 2D->3D(camera frame. not world frame)
         std::cout << "camera_xyz: " << camera_xyz_ref << std::endl;
         float xr,yr,zr;
@@ -222,20 +197,12 @@ int main (int argc, char* argv[])
                                                 ym,
                                                 zm);
 
-        cv::Mat uv_m = 1/zm * K * camera_xyz_m;
+        cv::Mat uv_m = 1/zm * K * camera_xyz_m;// 1/zm is normalize
 
         std::cout << "uv_m: " << uv_m << std::endl;
         uv_writer(filename_write, uv_m);
         
     }
-    // float u, v;
-    // u = uv.at<float>(0,0);
-    // v = uv.at<float>(1,0);
-    // std::cout << "u: " << u << ", v: " << v << std::endl;
-    // std::cout << "u: " << u/uv.at<float>(2,0) << ", v: " << v/uv.at<float>(2,0) << std::endl;
-    // }
-
-    // std::cout << "1/zw * P * pcl: " << 1/zw * P * pcl << std::endl;
     return 0;
 }
 
