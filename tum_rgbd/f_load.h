@@ -12,16 +12,10 @@
 // #include <opencv2/core/version.hpp>
 
 
-void pose_loader (const char*,
-	std::vector<cv::Mat>&, 
-	std::vector<cv::Mat>&,
-	const std::string&,
-	const std::string&);
-
-void pcl_loader (const char*,
-	std::vector<std::vector<float>>&);
-
-void uv_writer (const char *,
-	cv::Mat&);
+void file_loader (const char*,
+	std::vector<std::string>&, 
+	std::unordered_map<std::string, cv::Mat>&, 
+	std::unordered_map<std::string, cv::Mat>&,
+	std::string&);
 
 #endif
